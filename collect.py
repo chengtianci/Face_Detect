@@ -20,7 +20,7 @@ while (cap.isOpened()):
 		cv2.imshow('sahuibi',frame)
 		if cv2.waitKey(38) & 0xff == ord('q'): #35是延时35ms
 			dirfile = "./obj.bmp"
-			cv2.imwrite(dirfile,frame)  
+			cv2.imwrite(dirfile,frame)
 			break
 	else:
 		break
