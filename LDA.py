@@ -2,20 +2,21 @@
 from numpy import *
 from numpy import linalg as la
 import cv2
+import collect
 import os
 import numpy as np
 from matplotlib import pyplot as plt
 import knn
 import pdb
 
-rows = 112
-cols =92
-ClassNum = 40
+rows = 400
+cols = 400
+ClassNum = 10
 tol_num = 10
 train_samplesize = 10
 train = range(1,train_samplesize)
 Eigen_num = 40
-train_tol = 400
+train_tol = 100
 imagesize=cols*rows
 def loadImageSet():
     FaceMat = mat(zeros((train_tol,imagesize)))
@@ -24,7 +25,7 @@ def loadImageSet():
     for i in range(1,ClassNum+1):
         for j in range(1,train_samplesize+1):
             try:
-                 img = cv2.imread('D:\PyCharm\PyCharmProjects\ORL\s'+str(i)+'_'+str(j)+'.bmp',0)
+                 img = cv2.imread('./new/'+str(i)+'_'+str(j)+'.bmp',0)
             except:
                 print 'load %s failed'%i
 
@@ -62,6 +63,7 @@ def Eigenface(FaceMat,Eigen_num):
     return disc_set,disc_value,Mean_Image
 
 if __name__ == '__main__':
+    loadName = collect.col()
     FaceMat,label = loadImageSet()
     FaceMat_set = FaceMat.T
     disc_set,disc_value,MeanImage = Eigenface(FaceMat_set,Eigen_num)
@@ -111,7 +113,10 @@ if __name__ == '__main__':
     train_final = W_LDA.T*train_pro
 
     #调用knn邻近分类器
-    newImg = cv2.imread('D:\PyCharm\PyCharmProjects\s1_5.bmp',0)
+    # print loadName
+    newImg = cv2.imread(loadName,0)
+    # cv2.imshow("",newImg)
+    # cv2.waitKey(0)
     newImg = mat(newImg).flatten().T
     newImg_pro = disc_set.T*newImg
     newImg_final = W_LDA.T*newImg_pro

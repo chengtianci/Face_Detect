@@ -1,29 +1,33 @@
 # _*_ coding: UTF-8 _*_
-import numpy as np
+import gg
 import cv2
 
 
-#第一个摄像头
-cap = cv2.VideoCapture(0)
-#规定fourcc的配置
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-#输出文件名，fourcc格式，
-out = cv2.VideoWriter('ctca.avi',fourcc,20.0,(640,480))
+def col():
+    # 第一个摄像头
+    cap = cv2.VideoCapture(0)
+    # 规定fourcc的配置
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # 输出文件名，fourcc格式，
+    out = cv2.VideoWriter('ctca.avi', fourcc, 20.0, (640, 480))
+    dirfile = "./obj.bmp"
+    while (cap.isOpened()):
+        ret, frame = cap.read()
+        if ret == True:
+            # frame =cv2.flip(frame,0)#cv2.flip(翻转帧) 0->x轴，1->y轴,负数代表沿两个坐标轴同时翻转
 
-while (cap.isOpened()):
-	ret,frame = cap.read()
-	if ret == True:
-		#frame =cv2.flip(frame,0)#cv2.flip(翻转帧) 0->x轴，1->y轴,负数代表沿两个坐标轴同时翻转
+            # out.write(frame)
 
-		out.write(frame)
+            crop, img = gg.dec(frame)
+            cv2.imshow('sahuibi', img)
+            key = cv2.waitKey(35) & 0xff
 
-		cv2.imshow('sahuibi',frame)
-		if cv2.waitKey(38) & 0xff == ord('q'): #35是延时35ms
-			dirfile = "./obj.bmp"
-			cv2.imwrite(dirfile,frame)
-			break
-	else:
-		break
-cap.release()
-out.release()
-cv2.destroyAllWindows()
+            if (crop is not None) & (key == ord('s')):
+                cv2.imwrite(dirfile, crop)
+                break
+        else:
+            break
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+    return dirfile
